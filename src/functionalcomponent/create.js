@@ -2,10 +2,22 @@ import React, { useState } from 'react';
 import { Button, Checkbox, Form } from 'semantic-ui-react'
 import {server} from '../config';
 import axios from "axios";
+import Modal from 'react-modal';
+// import AnimeList from './Anime';
 
 function FunctionalcomponentCreate() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    
+    const [modalIsOpen,setModalIsOpen] = useState(false);
+
+    const setModalIsOpenToTrue =()=>{
+        setModalIsOpen(true)
+    }
+
+    const setModalIsOpenToFalse =()=>{
+        setModalIsOpen(false)
+    }
 
     function postData(){
         console.log(email);
@@ -20,6 +32,40 @@ function FunctionalcomponentCreate() {
         .then(function (response) {
             console.log(response);
             sessionStorage.setItem("token", response.data.token);
+            // console.log(response.data);
+
+            if(response.data.code == 200){
+                console.log('1');
+            }else{
+                
+                if(response.data.success){
+                    const message = response.data.success;
+                    alert(message);
+
+                }
+            }
+
+        })
+        .catch(function (response) {
+            //handle error
+
+        });
+        
+    }
+
+    function RegisterData(){
+        console.log(email);
+        console.log(password);
+        axios({
+            method: 'POST',
+            url: server + '/register',
+            // data: bodyFormData,
+            headers: { 'Content-Type': 'application/json' },
+            data : { email : email, password : password }
+        })
+        .then(function (response) {
+            console.log(response);
+            // sessionStorage.setItem("token", response.data.token);
         })
         .catch(function (response) {
             //handle error
@@ -46,21 +92,80 @@ function FunctionalcomponentCreate() {
 
     return (
         <div>
+<ul className="nav nav-tabs" role="tablist">
+  <li className="nav-item">
+    <a className="nav-link active" href="#login" role="tab" data-toggle="tab">Login</a>
+  </li>
+
+  <li className="nav-item">
+    <a className="nav-link" href="#register" role="tab" data-toggle="tab">Register</a>
+  </li>
+</ul>
+
+<div className="tab-content">
+  <div role="tabpanel" className="tab-pane fade show  active" id="login">
+
+  <h2 className="center"><b>Login Form</b></h2>
+            <button style={{float: "right"}} className="btn btn-success center" onClick={setModalIsOpenToTrue}>Register</button>
           <Form className="create-form">
+              <span className="show_message"></span>
               <Form.Field>
                   <label>Email</label>
-                  <input placeholder='Email' value={email} onChange={e => setEmail(e.target.value)} name="Email"/>
+                  <input placeholder='Email' className="form-control" value={email} onChange={e => setEmail(e.target.value)} name="Email"/>
               </Form.Field>
               <Form.Field>
                   <label>Password</label>
-                  <input placeholder='Password' value={password} onChange={e => setPassword(e.target.value)} name="Password"/>
+                  <input placeholder='Password' className="form-control" value={password} onChange={e => setPassword(e.target.value)} name="Password"/>
               </Form.Field>
               {/* <Form.Field>
                   <Checkbox label='I agree to the Terms and Conditions' onChange={(e) =>this.checkbox(!checkbox)}/>
               </Form.Field> */}
-              <Button onClick={postData} type='submit'>Submit</Button>
+              <button  onClick={postData} style={{margin: "12px 3px"}} className="btn btn-primary center" type='submit'>Submit</button >
           </Form>
-            <Button onClick={getData} type='submit'>get Items</Button>
+            <button  className="btn btn-success center" onClick={getData} type='submit'>get Items</button >
+            
+
+  </div>
+  <div role="tabpanel" className="tab-pane fade" id="register">
+
+    <h2 className="center"><b>Register Form</b></h2>
+        <Form className="create-form">
+                <Form.Field>
+                    <label>Email</label>
+                    <input placeholder='Email' className="form-control" value={email} onChange={e => setEmail(e.target.value)} name="Email"/>
+                </Form.Field>
+                <Form.Field>
+                    <label>Password</label>
+                    <input placeholder='Password' className="form-control" value={password} onChange={e => setPassword(e.target.value)} name="Password"/>
+                </Form.Field>
+                {/* <Form.Field>
+                    <Checkbox label='I agree to the Terms and Conditions' onChange={(e) =>this.checkbox(!checkbox)}/>
+                </Form.Field> */}
+                <button  onClick={RegisterData} style={{margin: "12px 3px"}} className="btn btn-primary center" type='submit'>Submit</button >
+        </Form>  
+    </div>
+</div>
+
+<Modal isOpen={modalIsOpen}>
+    <button onClick={setModalIsOpenToFalse}>x</button>
+
+    <h2 className="center"><b>Register Form</b></h2>
+    <Form className="create-form">
+              <Form.Field>
+                  <label>Email</label>
+                  <input placeholder='Email' className="form-control" value={email} onChange={e => setEmail(e.target.value)} name="Email"/>
+              </Form.Field>
+              <Form.Field>
+                  <label>Password</label>
+                  <input placeholder='Password' className="form-control" value={password} onChange={e => setPassword(e.target.value)} name="Password"/>
+              </Form.Field>
+              {/* <Form.Field>
+                  <Checkbox label='I agree to the Terms and Conditions' onChange={(e) =>this.checkbox(!checkbox)}/>
+              </Form.Field> */}
+              <button  onClick={RegisterData} style={{margin: "12px 3px"}} className="btn btn-primary center" type='submit'>Submit</button >
+          </Form>
+    {/* <AnimeList/> */}
+</Modal>
         </div>
     );
 
