@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link, Switch, Route } from 'react-router-dom';
 import FunctionalcomponentCreate from './functionalcomponent/create';
+import FunctionalcomponentDashboard from './functionalcomponent/dashboard';
+
 
 function FunctionalApp(){
 
@@ -22,6 +24,7 @@ function FunctionalApp(){
             <div className="container mt-3">
                 <Switch>
                     <Route exact path={["/create1"]} component={FunctionalcomponentCreate} />
+                    <Route exact path={["/dashboard"]} component={FunctionalcomponentDashboard} />
                 </Switch>
                 <br></br>
             </div>

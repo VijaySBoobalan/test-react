@@ -3,14 +3,12 @@ import { Button, Checkbox, Form } from 'semantic-ui-react'
 import {server} from '../config';
 import axios from "axios";
 import Modal from 'react-modal';
-// import AnimeList from './Anime';
+import { Redirect,Route  } from 'react-router';
 
 function FunctionalcomponentCreate() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    
     const [modalIsOpen,setModalIsOpen] = useState(false);
-
     const setModalIsOpenToTrue =()=>{
         setModalIsOpen(true)
     }
@@ -18,6 +16,9 @@ function FunctionalcomponentCreate() {
     const setModalIsOpenToFalse =()=>{
         setModalIsOpen(false)
     }
+
+    const [data, setData] = useState(null);  
+    let url = './functionalcomponent/dashboard';
 
     function postData(){
         console.log(email);
@@ -35,22 +36,21 @@ function FunctionalcomponentCreate() {
             // console.log(response.data);
 
             if(response.data.code == 200){
-                console.log('1');
+                window.location = url;
             }else{
                 
                 if(response.data.success){
                     const message = response.data.success;
-                    alert(message);
+                    setData(message);
+                    setInterval(setData, 3000).hide();
 
                 }
             }
-
         })
         .catch(function (response) {
             //handle error
 
         });
-        
     }
 
     function RegisterData(){
@@ -69,7 +69,6 @@ function FunctionalcomponentCreate() {
         })
         .catch(function (response) {
             //handle error
-
         });
         
     }
@@ -106,6 +105,7 @@ function FunctionalcomponentCreate() {
   <div role="tabpanel" className="tab-pane fade show  active" id="login">
 
   <h2 className="center"><b>Login Form</b></h2>
+  <h4 className="center" style={{color: "red"}}> {data} </h4>
             <button style={{float: "right"}} className="btn btn-success center" onClick={setModalIsOpenToTrue}>Register</button>
           <Form className="create-form">
               <span className="show_message"></span>
@@ -132,11 +132,11 @@ function FunctionalcomponentCreate() {
         <Form className="create-form">
                 <Form.Field>
                     <label>Email</label>
-                    <input placeholder='Email' className="form-control" value={email} onChange={e => setEmail(e.target.value)} name="Email"/>
+                    <input type="email" placeholder='Email' className="form-control" onChange={e => setEmail(e.target.value)} name="Email"/>
                 </Form.Field>
                 <Form.Field>
                     <label>Password</label>
-                    <input placeholder='Password' className="form-control" value={password} onChange={e => setPassword(e.target.value)} name="Password"/>
+                    <input type="password" placeholder='Password' className="form-control"  onChange={e => setPassword(e.target.value)} name="Password"/>
                 </Form.Field>
                 {/* <Form.Field>
                     <Checkbox label='I agree to the Terms and Conditions' onChange={(e) =>this.checkbox(!checkbox)}/>
